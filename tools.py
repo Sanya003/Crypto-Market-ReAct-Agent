@@ -4,9 +4,10 @@ import requests
 from typing import List, Dict, Any
 from langchain_core.tools import tool
 from newsapi import NewsApiClient
+import streamlit as st
 
-FREECRYPTO_TOKEN = os.getenv('FREECRYPTO_TOKEN')
-NEWSAPI_KEY = os.getenv('NEWSAPI_KEY')
+FREECRYPTO_TOKEN = st.secrets.get("FREECRYPTO_TOKEN") or os.getenv('FREECRYPTO_TOKEN')
+NEWSAPI_KEY = st.secrets.get("NEWSAPI_KEY") or os.getenv('NEWSAPI_KEY')
 
 
 @tool
