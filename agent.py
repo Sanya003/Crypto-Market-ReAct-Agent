@@ -6,8 +6,12 @@ from langchain_core.messages import SystemMessage, ToolMessage, AIMessage
 from langgraph.graph import MessagesState, START, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.checkpoint.memory import MemorySaver
+import streamlit as st
 
 from tools import ALL_TOOLS
+
+HF_API_KEY = st.secrets.get("HF_API_KEY") or os.getenv("HF_API_KEY")
+GROQ_API_KEY = st.secrets.get("GROQ_API_KEY") or os.getenv("GROQ_API_KEY")
 
 MAX_HISTORY = 6
 TOOL_CONTENT_LIMIT = 1500
@@ -70,7 +74,7 @@ def _get_llm(provider: str):
     if provider == "HuggingFace (Qwen3-8B)":
         endpoint = HuggingFaceEndpoint(
             repo_id="Qwen/Qwen3-8B",
-            huggingfacehub_api_token=os.getenv("HF_API_KEY"),
+            huggingfacehub_api_token=HF_API_KEY,
             task="text-generation",
             max_new_tokens=1024,
             temperature=0.1,
@@ -80,7 +84,7 @@ def _get_llm(provider: str):
     elif provider == "HuggingFace (Zephyr-7B)":
         endpoint = HuggingFaceEndpoint(
             repo_id="HuggingFaceH4/zephyr-7b-beta",
-            huggingfacehub_api_token=os.getenv("HF_API_KEY"),
+            huggingfacehub_api_token=HF_API_KEY,
             task="text-generation",
             max_new_tokens=1024,
             temperature=0.1,
@@ -95,7 +99,7 @@ def _get_llm(provider: str):
         model = model_map.get(provider, "llama-3.3-70b-versatile")
         return ChatGroq(
             model=model,
-            groq_api_key=os.getenv("GROQ_API_KEY"),
+            groq_api_key=GROQ_API_KEY,
             temperature=0,
         )
 
