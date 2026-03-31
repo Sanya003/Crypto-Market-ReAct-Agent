@@ -1,8 +1,8 @@
-# Crypto-Market-ReAct-Agent
+# ₿ CryptoMind — AI Crypto Market Analyst
 
-> Your AI-powered crypto analyst that **thinks, researches, and compares** before giving insights.
+A production-ready **LangGraph ReAct agent** that autonomously calls real-time crypto price and news APIs, reasons over live data and serves a multi-turn conversational UI via Streamlit.
+Powered by **Groq (LLaMA 3.3 & LLaMA 3.1)** & **HuggingFace (Qwen3 & Zephyr)** models, **FreeCryptoAPI**, and **NewsAPI**. 
 
-An intelligent **LLM-driven Crypto Market Analyst** built with **LangGraph + Tool Calling + Real-time APIs**.  
 Ask about any cryptocurrency — the agent fetches **live data**, reads **latest news**, and delivers **structured investment insights**.  
 
 This isn't just a chatbot — it's a *reasoning agent* that:  
@@ -12,72 +12,75 @@ This isn't just a chatbot — it's a *reasoning agent* that:
 ➡️ compares assets intelligently\
 ➡️ explains results clearly
 <br><br>
-
-## 🚀 What it can do
-
-- 🔎 Fetch **real-time cryptocurrency prices**
-- 📰 Analyze **latest crypto news**
-- ⚖️ Compare **multiple coins intelligently**
-- 🧠 Multi-step reasoning using **ReAct pattern**
-- 🛠 Smart **tool calling** with LangGraph
-- 💾 **Conversational memory** support
-- 📊 Clean, structured investment insights
-- ⚡ Interactive **CLI chat agent**
-<br>
   
 ## 🏗️ Architecture
 
 ```
-❓ User Question
-↓
-🧠 LLM decides what to do
-↓
-🛠 Calls tools (price + news)
-↓
-📡 Fetches real-time data
-↓
-📊 Returns structured analysis
-
+User Input
+    │
+    ▼
+Streamlit UI (app.py)
+    │
+    ▼
+LangGraph ReAct Agent (agent.py)
+    │  ┌─────────────────────────────────────┐
+    ├──▶  crypto_list_tool  → FreeCryptoAPI  │
+    ├──▶  crypto_data_tool  → FreeCryptoAPI  │  tools.py
+    └──▶  crypto_news_tool  → NewsAPI        │
+       └─────────────────────────────────────┘
+    │
+    ▼
+Models (reasoning + response)
+    ├──▶ Groq LLaMA 3.3 70B
+    ├──▶ Groq LLaMA 3.1 8B
+    ├──▶ HuggingFace (Qwen3-8B)
+    └──▶ HuggingFace (Zephyr-7B)
+    │
+    ▼
+MemorySaver (multi-turn conversation memory)
 ```
+
 <br>
 
-## ▶️ Run the Agent
+## ⚡ Local Setup
 
-```python
-python main.py
-```
+```bash
+# 1. Clone / enter the project folder
+cd crypto_agent
 
-### Example interaction:
-```
-👤 You: Compare XRP and DOGE — which is better?
+# 2. Create virtual environment
+python -m venv venv
+venv\Scripts\activate
 
-🤖 Agent:
-Summary
-...
-Market Data
-...
-News Highlights
-...
-Recommendation
-...
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Add your API keys
+# Edit .env and fill in your keys
+
+# 5. Run
+streamlit run app.py
 ```
+<br> 
+
+API Keys needed (all free tiers available):
+| Key | Get it at |
+|-----|-----------|
+| `GROQ_API_KEY` | https://console.groq.com |
+| `FREECRYPTO_TOKEN` | https://freecryptoapi.com |
+| `NEWSAPI_KEY` | https://newsapi.org |
+| `HF_API_KEY` | https://huggingface.co/ |
+
 <br>
 
 ## 🗂 Project Structure
 
 ```plaintext
-crypto-react-agent/
-│
-├── main.py
-├── test.py
-├── .env
+crypto_agent/
+├── app.py            # Streamlit web UI
+├── agent.py          # LangGraph ReAct agent + memory
+├── tools.py          # Crypto data + news tools
 ├── requirements.txt
-├── README.md
+├── .env
 └── README.md
 ```
-<br>
-
-## 🛠 Tools Used by the Agent
-- **crypto_list_tool** → Fetch available cryptocurrencies
-- **crypto_data_tool** → Get crypto price data
-- **crypto_news_tool** → Fetch latest news
